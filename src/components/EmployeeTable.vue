@@ -21,7 +21,11 @@
                         <input type="text" v-model="employee.email" />
                     </td>
                     <td v-else>{{ employee.email }}</td>
-                    <td>
+                    <td v-if="editing === employee.id">
+                            <button @click="editEmployee(employee)">Save</button>
+                            <button class="muted-button" @click="cancelEdit(employee)">Cancel</button>
+                    </td>
+                    <td v-else>
                         <button @click="editMode(employee.id)">Edit</button>
                         <button @click="$emit('delete:employee', employee.id)">Delete</button>
                     </td>
@@ -45,6 +49,10 @@ export default {
     methods: {
         editMode(id) {
             this.editing = id
+        },
+        cancelEdit(employee) {
+            Object.assign(employee, this.cachedEmployee)
+            this.editing = null;
         },
         editEmployee(employee) {
             if (employee.name === '' || employee.email == '') return
